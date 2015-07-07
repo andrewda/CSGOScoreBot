@@ -20,7 +20,7 @@ var client = new Twitter({
     access_token_secret: 'secret'
 });
 
-scorebot.connect('http://scorebot.hltv.org:10022', matchid, em);
+scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
 
 scorebot.on('roundOver', function(data, scores) {
     if (goodToGo) {
