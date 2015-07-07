@@ -35,22 +35,22 @@ scorebot.on('roundOver', function(data, scores) {
             winner = team2;
         }
         
-        if (parseInt(t1score) + parseInt(t2score) == 16) {
+        if (Number(t1score) + Number(t2score) == 16) {
             t1st    = t1score;
             t2st    = t2score;
             t1score = t2st;
             t2score = t1st;
             
             if (winTeam == 'CT') {
-                t1score = parseInt(parseInt(t1score) + 1).toString();
-                t2score = parseInt(parseInt(t2score) - 1).toString();
+                t1score = Number(Number(t1score) + 1).toString();
+                t2score = Number(Number(t2score) - 1).toString();
             } else if (winTeam == 'T') {
-                t1score = parseInt(parseInt(t1score) - 1).toString();
-                t2score = parseInt(parseInt(t2score) + 1).toString();
+                t1score = Number(Number(t1score) - 1).toString();
+                t2score = Number(Number(t2score) + 1).toString();
             }
         }
         
-        if (parseInt(t1score) + parseInt(t2score) >= 15) {
+        if (Number(t1score) + Number(t2score) >= 15) {
             if (!halftime) {
                 swapTeams();
             }
@@ -58,18 +58,18 @@ scorebot.on('roundOver', function(data, scores) {
         
         postToTwitter(tag + ' | #' + winner + ' wins the round!' + ' | ' + scoreTextSide);
 
-        if (parseInt(t1score) + parseInt(t2score) >= 15) {
+        if (Number(t1score) + Number(t2score) >= 15) {
             if (!halftime) {
                 postToTwitter(tag + ' | Halftime | ' + scoreText);
                 halftime = true;
             }
         }
         
-        if ((t1score == '16' && parseInt(t2score) < 15)) {
+        if ((t1score == '16' && Number(t2score) < 15)) {
             postToTwitter(tag + ' | ' + team1 + ' wins the map!');
         }
         
-        if ((parseInt(t1score) < 15 && t2score == '16')) {
+        if ((Number(t1score) < 15 && t2score == '16')) {
             postToTwitter(tag + ' | ' + team2 + ' wins the map!');
         }
         
