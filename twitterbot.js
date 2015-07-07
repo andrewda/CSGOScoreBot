@@ -6,9 +6,9 @@ var em           = new EventEmitter();
 var team1    = 'CT'; // Team that starts on CT
 var team2    = 'T'; // Team that starts on T
 var matchid  = 365123;
-var tag      = '#' + team1 + 'vs' + team2;
 var halftime = false;
 var goodToGo = false;
+var tag      = '#' + team1 + 'vs' + team2;
 var winTeam, t1score, t2score, t1t, t2t, t1st, t2st, winner, scoreText, scoreTextSide;
 
 //Twitter login
