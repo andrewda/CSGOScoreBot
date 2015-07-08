@@ -3,9 +3,9 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'VirtusPro'; // Team that starts on CT
-var team2     = 'fnatic'; // Team that starts on T
-var matchid   = 365263;
+var team1     = 'CT'; // Team that starts on CT
+var team2     = 'T'; // Team that starts on T
+var matchid   = 365374;
 var halftime  = false;
 var goodToGo  = false;
 var lastScore = [];
@@ -40,14 +40,22 @@ scorebot.on('roundOver', function(data, scores) {
             winner = team2;
         }
         
-        if (Number(t1score) + Number(t2score) + 1 == 16) {
+        if (Number(t1score) + Number(t2score) == 16) {
+            t1st = t1score;
+            t2st = t2score;
+            t1score = t2st;
+            t2score = t1st;
+            
             if (winTeam == 'CT') {
-                t1score = Number(Number(t1score) - 1).toString();
-                t2score = Number(Number(t2score) + 1).toString();
-            } else if (winTeam == 'T') {
                 t1score = Number(Number(t1score) + 1).toString();
                 t2score = Number(Number(t2score) - 1).toString();
+            } else if (winTeam == 'T') {
+                t1score = Number(Number(t1score) - 1).toString();
+                t2score = Number(Number(t2score) + 1).toString();
             }
+            
+            scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
+            scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
         }
         
         if (Number(t1score) + Number(t2score) >= 15) {
@@ -66,11 +74,11 @@ scorebot.on('roundOver', function(data, scores) {
         }
         
         if ((t1score == '16' && Number(t2score) < 15)) {
-            postToTwitter(tag + ' | ' + team1 + ' wins the map!');
+            postToTwitter(tag + ' | #' + team1 + ' wins the map!');
         }
         
         if ((Number(t1score) < 15 && t2score == '16')) {
-            postToTwitter(tag + ' | ' + team2 + ' wins the map!');
+            postToTwitter(tag + ' | #' + team2 + ' wins the map!');
         }
         
         if (t1score == '15' && t2score == '15') {
@@ -89,6 +97,7 @@ scorebot.on('scoreUpdate', function(t, ct) {
             Number(t)
             ];
         console.log("Good-To-Go!", '(CT - ' + ct + ' | ' + t + ' - T)');
+        console.log(" ");
     }
 });
 
