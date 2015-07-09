@@ -3,13 +3,16 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'CT'; // Team that starts on CT
-var team2     = 'T'; // Team that starts on T
-var matchid   = 365374;
+var team1     = 'Phenomenon'; // Team that starts on CT
+var team2     = 'Evolution'; // Team that starts on T
+var matchid   = 365486;
 var halftime  = false;
 var goodToGo  = false;
-var lastScore = [];
 var tag       = '#' + team1 + 'vs' + team2;
+var lastScore = {
+    'ct': 0,
+    't': 0
+    };
 var winTeam, t1score, t2score, t1t, t2t, t1st, t2st, winner, scoreText, scoreTextSide;
 
 //Twitter login
@@ -29,10 +32,6 @@ scorebot.on('roundOver', function(data, scores) {
         t2score       = scores.t;
         scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
         scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
-        lastScore     = [
-            Number(t1score),
-            Number(t2score)
-            ];
         
         if (winTeam == 'CT') {
             winner = team1;
@@ -54,8 +53,7 @@ scorebot.on('roundOver', function(data, scores) {
                 t2score = Number(Number(t2score) + 1).toString();
             }
             
-            scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
-            scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
+            updateScore();
         }
         
         if (Number(t1score) + Number(t2score) >= 15) {
@@ -64,26 +62,33 @@ scorebot.on('roundOver', function(data, scores) {
             }
         }
         
-        postToTwitter(tag + ' | #' + winner + ' wins the round!' + ' | ' + scoreTextSide);
+        if (Number(t1score) + Number(t2score) <= 30) {
+            postToTwitter(tag + ' | #' + winner + ' wins the round!' + ' | ' + scoreTextSide);
+        }
 
-        if (Number(t1score) + Number(t2score) >= 15) {
+        if (Number(t1score) + Number(t2score) >= 15 && lastScore.ct + lastScore.t >= 14) {
             if (!halftime) {
                 postToTwitter(tag + ' | Halftime | ' + scoreText);
                 halftime = true;
             }
         }
         
-        if ((t1score == '16' && Number(t2score) < 15)) {
+        if ((t1score == '16' && Number(t2score) < 15) || (t1score == '17' && Number(t2score) < 15)) {
             postToTwitter(tag + ' | #' + team1 + ' wins the map!');
         }
         
-        if ((Number(t1score) < 15 && t2score == '16')) {
+        if ((Number(t1score) < 15 && t2score == '16') || (Number(t1score) < 15 && t2score == '17')) {
             postToTwitter(tag + ' | #' + team2 + ' wins the map!');
         }
         
         if (t1score == '15' && t2score == '15') {
             postToTwitter(tag + ' | We\'re going to overtime! (At the moment, I cannot post overtime scores. Please check HLTV or watch the live stream.)');
         }
+        
+        lastScore = {
+            'ct': Number(t1score),
+            't': Number(t2score)
+            };
     } else {
         console.log('Waiting for Good-To-Go!');
     }
@@ -96,7 +101,7 @@ scorebot.on('scoreUpdate', function(t, ct) {
             Number(ct), 
             Number(t)
             ];
-        console.log("Good-To-Go!", '(CT - ' + ct + ' | ' + t + ' - T)');
+        console.log("Good-To-Go!", '(CT [' + team1 + '] - ' + ct + ' | ' + t + ' - [' + team2 + '] T)');
         console.log(" ");
     }
 });
@@ -109,11 +114,16 @@ function swapTeams() {
 }
 
 function postToTwitter(tweet) {
-    client.post('statuses/update', {
+    /*client.post('statuses/update', {
         status: tweet
     }, function(error, tweet, response) {
         if (error) console.log(error);
-    });
+    });*/
     
     console.log(tweet);
+}
+
+function updateScore() {
+    scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
+    scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
 }
