@@ -3,9 +3,9 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'Phenomenon'; // Team that starts on CT
-var team2     = 'Evolution'; // Team that starts on T
-var matchid   = 365486;
+var team1     = 'Cloud9'; // Team that starts on CT
+var team2     = 'Liquid'; // Team that starts on T
+var matchid   = 365793;
 var halftime  = false;
 var goodToGo  = false;
 var tag       = '#' + team1 + 'vs' + team2;
@@ -25,34 +25,19 @@ var client = new Twitter({
 
 scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
 
-scorebot.on('roundOver', function(data, scores) {
-    if (goodToGo) {
-        winTeam       = data.side;
-        t1score       = scores.ct;
-        t2score       = scores.t;
-        scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
-        scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
+scorebot.on('roundOver', function(data, scores, knifeRound) {
+    winTeam = data.side;
+    
+    if (goodToGo && !knifeRound) {
+        updateScore();
         
         if (winTeam == 'CT') {
             winner = team1;
+            t1score = Number(t1score) + 1;
+            updateScore();
         } else if (winTeam == 'T') {
             winner = team2;
-        }
-        
-        if (Number(t1score) + Number(t2score) == 16) {
-            t1st = t1score;
-            t2st = t2score;
-            t1score = t2st;
-            t2score = t1st;
-            
-            if (winTeam == 'CT') {
-                t1score = Number(Number(t1score) + 1).toString();
-                t2score = Number(Number(t2score) - 1).toString();
-            } else if (winTeam == 'T') {
-                t1score = Number(Number(t1score) - 1).toString();
-                t2score = Number(Number(t2score) + 1).toString();
-            }
-            
+            t2score = Number(t2score) + 1;
             updateScore();
         }
         
@@ -89,6 +74,13 @@ scorebot.on('roundOver', function(data, scores) {
             'ct': Number(t1score),
             't': Number(t2score)
             };
+    } else if (knifeRound) {
+        if (winTeam == 'CT') {
+            postToTwitter(tag + ' | #' + team1 + ' wins the knife round!');
+        } else if (winTeam == 'T') {
+            postToTwitter(tag + ' | #' + team2 + ' wins the knife round!');
+            swapTeams(); // Assume the T teams wants to be CT (until we get a better method. the only map where this might not be true is dust2)
+        }
     } else {
         console.log('Waiting for Good-To-Go!');
     }
@@ -101,6 +93,8 @@ scorebot.on('scoreUpdate', function(t, ct) {
             Number(ct), 
             Number(t)
             ];
+        t1score = Number(ct);
+        t2score = Number(t);
         console.log("Good-To-Go!", '(CT [' + team1 + '] - ' + ct + ' | ' + t + ' - [' + team2 + '] T)');
         console.log(" ");
     }
@@ -111,14 +105,19 @@ function swapTeams() {
     t2t   = team2;
     team1 = t2t;
     team2 = t1t;
+
+    t1st    = t1score;
+    t2st    = t2score;
+    t1score = t2st;
+    t2score = t1st;
 }
 
 function postToTwitter(tweet) {
-    /*client.post('statuses/update', {
+    client.post('statuses/update', {
         status: tweet
     }, function(error, tweet, response) {
         if (error) console.log(error);
-    });*/
+    });
     
     console.log(tweet);
 }
