@@ -1,13 +1,13 @@
-// This bot has new features, like knife round detection. (Also needs new hltv-scorebot)
+// This bot has new features, like knife round detection. (needs new hltv-scorebot)
 
 var scorebot     = require('hltv-scorebot');
 var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'Titan'; // Team that starts on CT
-var team2     = 'Luminosity'; // Team that starts on T
-var matchid   = 365646;
+var team1     = 'Cloud9'; // Team that starts on CT
+var team2     = 'Liquid'; // Team that starts on T
+var matchid   = 365793;
 var halftime  = false;
 var goodToGo  = false;
 var tag       = '#' + team1 + 'vs' + team2;
@@ -27,13 +27,8 @@ var client = new Twitter({
 
 scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
 
-scorebot.on('restart', function() {
-    
-});
-
 scorebot.on('roundOver', function(data, scores, knifeRound) {
     winTeam = data.side;
-    console.log(knifeRound);
     
     if (goodToGo && !knifeRound) {
         updateScore();
