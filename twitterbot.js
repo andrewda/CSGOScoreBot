@@ -18,10 +18,10 @@ var winTeam, t1score, t2score, t1t, t2t, t1st, t2st, winner, scoreText, scoreTex
 
 //Twitter login
 var client = new Twitter({
-    consumer_key:        'e69j0iej9N8qnxZWMyExJXXia',
-    consumer_secret:     'HaYHLg8BglIjBpyt5PeCgzbGQXAnbmA6IoRxDCmASpsJU1QWZG',
-    access_token_key:    '2954514570-WkqbEnE7a2mug3nBZopt3DcG1rErx88dmTD4rRj',
-    access_token_secret: 'Qglq2MXTaNgmkXp0ANuDzYVVrWFeJEfBKvwzttVLPwuJj'
+    consumer_key:        'key',
+    consumer_secret:     'secret',
+    access_token_key:    'key',
+    access_token_secret: 'secret'
 });
 
 scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
