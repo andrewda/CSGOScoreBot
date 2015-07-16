@@ -75,10 +75,14 @@ scorebot.on('roundOver', function(data, scores) {
         
         if ((t1score == '16' && Number(t2score) < 15) || (t1score == '17' && Number(t2score) < 15)) {
             postToTwitter(tag + ' | #' + team1 + ' wins the map!');
+            
+            endGame();
         }
         
         if ((Number(t1score) < 15 && t2score == '16') || (Number(t1score) < 15 && t2score == '17')) {
             postToTwitter(tag + ' | #' + team2 + ' wins the map!');
+            
+            endGame();
         }
         
         if (t1score == '15' && t2score == '15') {
@@ -126,4 +130,9 @@ function postToTwitter(tweet) {
 function updateScore() {
     scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
     scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
+}
+
+function endGame() {
+    matchid = 0;
+    scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
 }
