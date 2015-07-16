@@ -3,11 +3,12 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'Cloud9'; // Team that starts on CT
+var team1     = 'fnatic'; // Team that starts on CT
 var team2     = 'Liquid'; // Team that starts on T
-var matchid   = 365793;
+var matchid   = 366435;
 var halftime  = false;
 var goodToGo  = false;
+var restarted = false
 var tag       = '#' + team1 + 'vs' + team2;
 var lastScore = {
     'ct': 0,
@@ -17,13 +18,17 @@ var winTeam, t1score, t2score, t1t, t2t, t1st, t2st, winner, scoreText, scoreTex
 
 //Twitter login
 var client = new Twitter({
-    consumer_key:        'key',
-    consumer_secret:     'secret',
-    access_token_key:    'key',
-    access_token_secret: 'secret'
+    consumer_key:        'e69j0iej9N8qnxZWMyExJXXia',
+    consumer_secret:     'HaYHLg8BglIjBpyt5PeCgzbGQXAnbmA6IoRxDCmASpsJU1QWZG',
+    access_token_key:    '2954514570-WkqbEnE7a2mug3nBZopt3DcG1rErx88dmTD4rRj',
+    access_token_secret: 'Qglq2MXTaNgmkXp0ANuDzYVVrWFeJEfBKvwzttVLPwuJj'
 });
 
 scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
+
+scorebot.on('restart', function() {
+    restarted = true;
+});
 
 scorebot.on('roundOver', function(data, scores, knifeRound) {
     winTeam = data.side;
@@ -60,10 +65,18 @@ scorebot.on('roundOver', function(data, scores, knifeRound) {
         
         if ((t1score == '16' && Number(t2score) < 15) || (t1score == '17' && Number(t2score) < 15)) {
             postToTwitter(tag + ' | #' + team1 + ' wins the map!');
+            restarted = false;
+            goodToGo  = false;
+            
+            endGame();
         }
         
         if ((Number(t1score) < 15 && t2score == '16') || (Number(t1score) < 15 && t2score == '17')) {
             postToTwitter(tag + ' | #' + team2 + ' wins the map!');
+            restarted = false;
+            goodToGo  = false;
+            
+            endGame()
         }
         
         if (t1score == '15' && t2score == '15') {
@@ -125,4 +138,11 @@ function postToTwitter(tweet) {
 function updateScore() {
     scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
     scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
+}
+
+function endGame() {
+    // This function will be changed to automatically start the next game later.
+    
+    matchid = 0;
+    scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
 }
