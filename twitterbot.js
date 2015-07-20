@@ -3,9 +3,9 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'CT'; // Team that starts on CT
-var team2     = 'T'; // Team that starts on T
-var matchid   = 123456;
+var team1     = 'SpaceSoldiers'; // Team that starts on CT
+var team2     = 'k1ckPT'; // Team that starts on T
+var matchid   = 367133; // The HLTV matchid
 var halftime  = false;
 var goodToGo  = false;
 var restarted = false
@@ -18,10 +18,10 @@ var winTeam, t1score, t2score, t1t, t2t, t1st, t2st, winner, scoreText, scoreTex
 
 //Twitter login
 var client = new Twitter({
-    consumer_key:        'key',
-    consumer_secret:     'secret',
-    access_token_key:    'key',
-    access_token_secret: 'secret'
+    consumer_key:        'e69j0iej9N8qnxZWMyExJXXia',
+    consumer_secret:     'HaYHLg8BglIjBpyt5PeCgzbGQXAnbmA6IoRxDCmASpsJU1QWZG',
+    access_token_key:    '2954514570-WkqbEnE7a2mug3nBZopt3DcG1rErx88dmTD4rRj',
+    access_token_secret: 'Qglq2MXTaNgmkXp0ANuDzYVVrWFeJEfBKvwzttVLPwuJj'
 });
 
 scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
@@ -67,16 +67,12 @@ scorebot.on('roundOver', function(data, scores, knifeRound) {
             postToTwitter(tag + ' | #' + team1 + ' wins the map!');
             restarted = false;
             goodToGo  = false;
-            
-            endGame();
         }
         
         if ((Number(t1score) < 15 && t2score == '16') || (Number(t1score) < 15 && t2score == '17')) {
             postToTwitter(tag + ' | #' + team2 + ' wins the map!');
             restarted = false;
             goodToGo  = false;
-            
-            endGame()
         }
         
         if (t1score == '15' && t2score == '15') {
@@ -94,7 +90,7 @@ scorebot.on('roundOver', function(data, scores, knifeRound) {
             postToTwitter(tag + ' | #' + team2 + ' wins the knife round!');
             swapTeams(); // Assume the T teams wants to be CT (until we get a better method. the only map where this might not be true is dust2)
         }
-    } else {
+    } else if (!goodToGo) {
         console.log('Waiting for Good-To-Go!');
     }
 });
