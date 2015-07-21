@@ -28,9 +28,6 @@ scorebot.on('kill', function() {
     scorebot.getPlayers(function(allPlayers, playerAttr) {
         tenPlayer = allPlayers;
         if (goodToGo && allPlayers) {
-            console.log("CT:", playerAttr.ct[0].name, playerAttr.ct[0].id);
-            console.log("T:", playerAttr.t[0].name, playerAttr.t[0].id);
-            
             if (tPlayer == '' || ctPlayer == '') {
                 tPlayer  = playerAttr.t[0].id;
                 ctPlayer = playerAttr.ct[0].id;
