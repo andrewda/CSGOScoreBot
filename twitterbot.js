@@ -3,9 +3,9 @@ var Twitter      = require('twitter');
 var EventEmitter = require('events').EventEmitter;
 var em           = new EventEmitter();
 
-var team1     = 'eBettle'; // Team that starts on CT
-var team2     = 'nerdRage'; // Team that starts on T
-var matchid   = 367252; // The HLTV matchid
+var team1     = ''; // Team that starts on CT
+var team2     = ''; // Team that starts on T
+var matchid   = XXXXXX; // The HLTV matchid
 var halftime  = false;
 var goodToGo  = false;
 var tenPlayer = false;
@@ -50,16 +50,16 @@ scorebot.on('roundOver', function(data, scores, knifeRound) {
     winTeam = data.side;
     
     if (goodToGo && !knifeRound && tenPlayer) {
-        updateScore();
+        updateScoreText();
         
         if (winTeam == 'CT') {
             winner = team1;
             t1score = Number(t1score) + 1;
-            updateScore();
+            updateScoreText();
         } else if (winTeam == 'T') {
             winner = team2;
             t2score = Number(t2score) + 1;
-            updateScore();
+            updateScoreText();
         }
         
         postToTwitter(tag + ' | #' + winner + ' wins the round!' + ' | ' + scoreTextSide);
@@ -123,13 +123,16 @@ function postToTwitter(tweet) {
     console.log(tweet);
 }
 
-function updateScore() {
+function updateScoreText() {
     scoreText     = '#' + team1 + ' ' + t1score + ' : ' + t2score + ' #' + team2;
     scoreTextSide = '#' + team1 + ' (CT) ' + t1score + ' : ' + t2score + ' (T) #' + team2;
 }
 
 function endGame() {
-    // This function will be changed to automatically start the next game later.
+    /*  TODO:
+            - Automatically start new game when current game ends. 
+            - Keep checking for a new game until a one starts on HLTV.
+    */
     
     matchid = 0;
     scorebot.connect('http://scorebot.hltv.org:10022', matchid, em, false);
