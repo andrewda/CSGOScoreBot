@@ -1,5 +1,7 @@
 # CSGOScoreBot
 
+[![Build][travis-img]][travis-url]
+
 ## How to Run
 ```bash
 $ git clone https://github.com/andrewda/CSGOScoreBot
@@ -29,3 +31,8 @@ Enter your newly created OAuth2 id and secret in the appropriate location in the
 Next, you'll need to enter the account information for the Reddit accounts you'll be using on the bot.
 The bot will automatically cycle through the accounts to avoid being slowed down by Reddit's occasional
 one-minute cooldowns.
+
+<!-- Badge URLs -->
+
+[travis-img]:    https://img.shields.io/travis/andrewda/hltv-livescore.svg?style=flat-square
+[travis-url]:    https://travis-ci.org/andrewda/hltv-livescore
