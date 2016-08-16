@@ -39,14 +39,6 @@ if (cluster.isMaster) {
         var worker = cluster.fork();
 
         cluster_map[worker.id] = game;
-
-        var worker2 = cluster.fork();
-
-        cluster_map[worker2.id] = game;
-
-        var worker3 = cluster.fork();
-
-        cluster_map[worker3.id] = game;
     });
 
     cluster.on('online', function(worker) {
