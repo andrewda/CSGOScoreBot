@@ -9,7 +9,7 @@
     "score"
   ],
   "main": "bot.js",
-  "license": "MIT",
+  "license": "GPLv3",
   "author": {
     "name": "Andrew Dassonville",
     "email": "dassonville.andrew@gmail.com",
