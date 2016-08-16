@@ -18,6 +18,8 @@
 
 var cluster = require('cluster');
 var LiveGames = require('hltv-live-games');
+var HLTVBot = require('./lib/');
+
 var AccountRotation = require('./lib/utils/AccountRotation');
 
 var options = require('./options.json');
@@ -28,24 +30,25 @@ var lg = new LiveGames({
 
 var accounts = new AccountRotation(options.accounts, 60000);
 
-var cluster_map = {};
+var clusterMap = {};
 var disconnected = {};
 
 if (cluster.isMaster) {
     lg.on('newGame', function(game) {
         console.log('new game');
-        console.log(game)
+        console.log(game);
 
         var worker = cluster.fork();
 
-        cluster_map[worker.id] = game;
+        clusterMap[worker.id] = game;
     });
 
     cluster.on('online', function(worker) {
         console.log('Worker is now online');
 
         cluster.workers[worker.id].on('message', function(data) {
-            console.log('got message', data)
+            console.log('got message', data);
+
             if (data.type === 'disconnect') {
                 disconnected[worker.id] = true;
             }
@@ -58,27 +61,25 @@ if (cluster.isMaster) {
                 accounts: options.accounts,
                 oauth: options.OAuth2,
                 debug: options.debug,
-                game: cluster_map[worker.id]
+                game: clusterMap[worker.id]
             }
         });
     });
 
     cluster.on('exit', function(worker, code, signal) {
-        if (!disconnected[worker.id]) {
+        if (disconnected[worker.id]) {
+            delete disconnected[worker.id];
+        } else {
             console.log('Worker died with code: ' + code + ', and signal: ' + signal);
             console.log('Starting a new worker');
 
             var newWorker = cluster.fork();
 
-            cluster_map[newWorker.id] = cluster_map[worker.id];
-            delete cluster_map[worker.id];
-        } else {
-            delete disconnected[worker.id];
+            clusterMap[newWorker.id] = clusterMap[worker.id];
+            delete clusterMap[worker.id];
         }
     });
 } else {
-    var HLTVBot = require('./lib/');
-
     process.on('message', function(message) {
         if (message.type === 'start') {
             var bot = new HLTVBot(message.data);

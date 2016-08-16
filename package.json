@@ -36,6 +36,6 @@
   },
   "scripts": {
     "run": "node bot.js",
-    "test": "./node_modules/eslint/bin/eslint.js ./*/*.js"
+    "test": "./node_modules/eslint/bin/eslint.js ./*.js ./lib/*.js ./lib/utils/*.js"
   }
 }
