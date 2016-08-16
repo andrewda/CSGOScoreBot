@@ -20,7 +20,7 @@
     "url": "https://github.com/andrewda/CSGOScoreBot.git"
   },
   "dependencies": {
-    "fuzzyset.js": "0.0.1",
+    "fuzzyset.js": "^0.0.1",
     "hltv-live-games": "^1.3.0",
     "hltv-livescore": "^1.1.1",
     "raw.js": "^0.6.0"
