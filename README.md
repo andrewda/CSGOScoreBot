@@ -2,6 +2,15 @@
 
 [![Build][travis-img]][travis-url]
 
+## Introduction
+
+What is CSGOScoreBot?
+
+CSGOScoreBot started as a tiny Twitter bot which would tweet out the results of professional CS:GO games,
+but has evolved to be a clustered bot which will slave away to update viewers of live game information at
+a glance without the need to pull up the stream. The original Twitter bot can still be found on the `old`
+branch, but beware, the code is incredibly ugly!
+
 ## How to Run
 ```bash
 $ git clone https://github.com/andrewda/CSGOScoreBot
