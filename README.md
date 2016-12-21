@@ -1,6 +1,7 @@
 # CSGOScoreBot
 
 [![Build][travis-img]][travis-url]
+[![Steam Donate][steam-donate-img]][steam-donate-url]
 
 ## Introduction
 
@@ -62,5 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <!-- Badge URLs -->
 
-[travis-img]:    https://img.shields.io/travis/andrewda/hltv-livescore.svg?style=flat-square
-[travis-url]:    https://travis-ci.org/andrewda/hltv-livescore
+[travis-img]:       https://img.shields.io/travis/andrewda/hltv-livescore.svg?style=flat-square
+[travis-url]:       https://travis-ci.org/andrewda/hltv-livescore
+[steam-donate-img]: https://img.shields.io/badge/donate-Steam-lightgrey.svg?style=flat-square
+[steam-donate-url]: https://steamcommunity.com/tradeoffer/new/?partner=132224795&token=HuEE9Mk1
