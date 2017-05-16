@@ -1,5 +1,7 @@
 # CSGOScoreBot
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/andrewda/CSGOScoreBot.svg)](https://greenkeeper.io/)
+
 [![Build][travis-img]][travis-url]
 [![Steam Donate][steam-donate-img]][steam-donate-url]
 
